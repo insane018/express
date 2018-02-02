@@ -1,0 +1,15 @@
+html, body{
+  overflow-x: hidden;
+}
+.header {
+  text-align: center;
+}
+.main {
+  display: flex;
+}
+.left {
+  width: 200px;
+}
+.right {
+  flex: 1;
+}
