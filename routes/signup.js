@@ -3,6 +3,7 @@ const router = express.Router()
 const fs = require('fs')
 const sha1 = require('sha1')
 const path = require('path')
+const flash = require('connect-flash')
 
 const UserModel = require('../models/user')
 const checkNotLogin = require('../middlewares/check').checkNotLogin
@@ -14,6 +15,7 @@ router.get('/', checkNotLogin, function (req, res, next) {
 
 // POST /signup 用户注册
 router.post('/', checkNotLogin, function (req, res, next) {
+  console.log(12321321)
   const name = req.fields.name
   const gender = req.fields.gender
   const bio = req.fields.bio
@@ -53,15 +55,14 @@ router.post('/', checkNotLogin, function (req, res, next) {
 
   let user = {name, password, gender, bio, avatar}
   UserModel.create(user).then(function(result) {
-    console.log(result)
-    let newUser = result.opts[0]
+    let newUser = result.ops[0]
     delete newUser.password
     req.flash('success', '注册成功')
     res.redirect('/posts')
   }).catch(e=>{
     fs.unlink(req.files.avatar.path)
     if(e.message.match('duplicate key')) {
-      res.flash('error', '用户名已被占用')
+      req.flash('error', '用户名已被占用')
       return res.redirect('/signup')
     }
     next(e)
